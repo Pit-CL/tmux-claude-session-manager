@@ -28,6 +28,7 @@ emit_rows() {
     # Nombre mostrado: basename de la carpeta. Para worktrees creados por
     # prefix+W (<repo>-<tipo>-<timestamp>), recortar a solo <tipo>-<timestamp>.
     name="${path##*/}"
+    name="${name% (deleted)}"   # un worktree ya borrado deja el cwd como ".../x (deleted)"
     [[ "$name" =~ (feat|fix|chore|refactor)-[0-9]{8}-[0-9]{6}$ ]] && name="${BASH_REMATCH[0]}"
     # rank \t session \t icon \t age \t name   (rank/session hidden via --with-nth)
     printf '%s\t%s\t%s\t%5s\t%s\n' "$rank" "$s" "$icon" "$ago" "$name"
