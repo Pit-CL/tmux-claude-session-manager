@@ -26,7 +26,7 @@ emit_rows() {
     esac
     if [ -n "$at" ]; then ago="$(((now - at) / 60))m"; else ago='-'; fi
     # rank \t session \t icon \t age \t path   (rank/session hidden via --with-nth)
-    printf '%s\t%s\t%s\t%5s\t%s\n' "$rank" "$s" "$icon" "$ago" "${path/#$HOME/~}"
+    printf '%s\t%s\t%s\t%5s\t%s\n' "$rank" "$s" "$icon" "$ago" "${path##*/}"
     # rank asc (attention-needed floats up), then age asc so the session that
     # finished just now sits at the top of its group. -k4,4n reads the leading
     # number of the age field ("5m" -> 5; "-" -> 0).
