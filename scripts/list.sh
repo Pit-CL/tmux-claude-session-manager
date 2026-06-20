@@ -32,14 +32,15 @@ if [ -n "$sess" ]; then
     [ -z "$(nested_session)" ] && break
     sleep 0.05
   done
-  # Estábamos DENTRO del popup de una sesión claude (recién cerrado): el invocador
-  # era ese cliente anidado, ya detachado. Reabrir el menú en el cliente externo vía
-  # la heurística original — NO usar $1, apunta a un cliente que ya no existe.
+  # We just closed the popup of a claude session we were inside: the invoking client
+  # was that now-detached nested client, so reopen the menu on the outer client via
+  # the usual heuristic. Don't reuse $1 — it points at a client that no longer exists.
   host="$(host_client)"
 else
-  # Invocación normal desde una sesión no-claude: abrir el popup en QUIEN invocó (lo
-  # pasa el bind como '#{client_name}'), para que con varios clientes (Mac + Termius)
-  # el popup salga en el terminal correcto, no en el primero que liste host_client().
+  # Normal invocation from a non-prefixed session: host the popup on the *invoking*
+  # client (passed by the binding as '#{client_name}') so that, with multiple clients
+  # attached, the popup lands on the right terminal instead of whichever one
+  # host_client() happens to list first.
   host="${1:-$(host_client)}"
 fi
 tmux set-option -g @claude_parent "$host"
