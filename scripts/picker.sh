@@ -25,10 +25,10 @@ emit_rows() {
     *) icon=$'\033[90m●\033[0m   ?    ' rank=2 ;;       # grey   - unknown (no hook yet)
     esac
     if [ -n "$at" ]; then ago="$(((now - at) / 60))m"; else ago='-'; fi
-    # Nombre mostrado: basename de la carpeta. Para worktrees creados por
-    # prefix+W (<repo>-<tipo>-<timestamp>), recortar a solo <tipo>-<timestamp>.
+    # Display name: the directory basename. For worktrees created by prefix+W
+    # (<repo>-<type>-<timestamp>), trim it down to just <type>-<timestamp>.
     name="${path##*/}"
-    name="${name% (deleted)}"   # un worktree ya borrado deja el cwd como ".../x (deleted)"
+    name="${name% (deleted)}"   # a removed worktree leaves the cwd as ".../x (deleted)"
     [[ "$name" =~ (feat|fix|chore|refactor)-[0-9]{8}-[0-9]{6}$ ]] && name="${BASH_REMATCH[0]}"
     # rank \t session \t icon \t age \t name   (rank/session hidden via --with-nth)
     printf '%s\t%s\t%s\t%5s\t%s\n' "$rank" "$s" "$icon" "$ago" "$name"
