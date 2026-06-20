@@ -32,14 +32,16 @@ if [ -n "$sess" ]; then
     [ -z "$(nested_session)" ] && break
     sleep 0.05
   done
+  # Estábamos DENTRO del popup de una sesión claude (recién cerrado): el invocador
+  # era ese cliente anidado, ya detachado. Reabrir el menú en el cliente externo vía
+  # la heurística original — NO usar $1, apunta a un cliente que ya no existe.
+  host="$(host_client)"
+else
+  # Invocación normal desde una sesión no-claude: abrir el popup en QUIEN invocó (lo
+  # pasa el bind como '#{client_name}'), para que con varios clientes (Mac + Termius)
+  # el popup salga en el terminal correcto, no en el primero que liste host_client().
+  host="${1:-$(host_client)}"
 fi
-
-# El cliente que invocó el picker (lo pasa el bind como '#{client_name}'). Con
-# varios clientes attached (ej: Mac + Termius en el mismo server tmux), abre el
-# popup en QUIEN invocó, en vez de adivinar con host_client() — que elige el primer
-# cliente no-claude (el Mac) y manda el popup al terminal equivocado. Fallback a la
-# heurística original si no llega $1.
-host="${1:-$(host_client)}"
 tmux set-option -g @claude_parent "$host"
 
 # Host the picker on the outer client. -c is honored because that client has no
